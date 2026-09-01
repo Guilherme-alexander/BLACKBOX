@@ -1,0 +1,134 @@
+# -------------------------------
+# Arquivos e pastas do BLACKBOX Dropper
+# -------------------------------
+
+# Diretório de saída dos droppers (contém .exe gerados)
+dist/
+
+# Arquivos temporários gerados durante a compilação
+build/
+D.py
+D.spec
+
+# -------------------------------
+# Arquivos compilados e binários
+# -------------------------------
+
+# Executáveis Windows
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Arquivos de pacote e instalação
+*.msi
+*.msix
+*.deb
+*.rpm
+
+# -------------------------------
+# Python
+# -------------------------------
+
+# Arquivos compilados Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Arquivos de distribuição
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib64/
+venv/
+ENV/
+
+# -------------------------------
+# Arquivos específicos do Wine
+# -------------------------------
+
+# Configuração e diretórios do Wine
+.wine/
+*.wine
+
+# -------------------------------
+# Ferramentas de desenvolvimento
+# -------------------------------
+
+# PyInstaller
+*.spec
+
+# -------------------------------
+# Arquivos do sistema operacional
+# -------------------------------
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# -------------------------------
+# Arquivos de log e temporários
+# -------------------------------
+
+# Logs
+*.log
+log.txt
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak
+*.old
+
+# -------------------------------
+# Arquivos de IDE e editores
+# -------------------------------
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.vimrc
+*.gvimrc
+
+# -------------------------------
+# Arquivos de ambiente e sensíveis
+# -------------------------------
+
+# Arquivos de configuração local
+.env
+.env.local
+.env.*.local
+
+# Chaves e certificados
+*.pem
+*.key
+*.crt
+*.p12
